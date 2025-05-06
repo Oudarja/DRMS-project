@@ -26,8 +26,6 @@ table = dynamodb.Table('team-alpha-ai')
 
 user_id = "Oudarja_Tanmoy"
 
-employee_info=[]
-
 # Create item (C)
  # employee_info = [
     #     {'employee_id': 'E000',

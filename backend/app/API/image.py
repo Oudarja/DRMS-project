@@ -1,7 +1,7 @@
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException
 from app.services import yolo_service, s3_service, dynamodb_service_image
 from datetime import datetime
-
+import uuid
 
 router = APIRouter()
 
@@ -9,7 +9,9 @@ router = APIRouter()
 async def upload_image(employee_id: str = Form(...),file: UploadFile = File(...)):
     # Step 1: Save temporarily & run YOLO
     # This returns the raw content of the file in bytes, not a file path or an image object.
-    tags = yolo_service.detect_objects(await file.read())
+    content=await file.read()
+    size = len(content)  # image size in bytes
+    tags = yolo_service.detect_objects(content)
 
     # Step 2: Upload image to S3
     #  If the file was read before (e.g., await file.read() for YOLO), the internal pointer
@@ -18,19 +20,25 @@ async def upload_image(employee_id: str = Form(...),file: UploadFile = File(...)
     
     file.file.seek(0)  # reset file pointer
     filename = f"{employee_id}/{uuid.uuid4()}.jpg"
-    s3_url = s3_service.upload_to_s3(file.file, filename)
+    s3_location = s3_service.upload_to_s3(file.file, filename)
 
-    # Step 3: Save metadata to DynamoDB
+    # Step 3: Save metadata to DynamoDB_service_image
     metadata = {
-        "image_id": str(uuid.uuid4()),
         "employee_id": employee_id,
         "upload_time": datetime.utcnow().isoformat(),
-        "s3_url": s3_url,
-        "tags": tags
+        "s3_location": s3_location,
+        "tags": tags,
+        "size": size
     }
-    dynamodb_service.save_image_metadata(metadata)
+    dynamodb_service_image.save_image_metadata(metadata)
 
-    return {"message": "Image uploaded", "tags": tags, "s3_url": s3_url}
+    return {"message": "Image uploaded", "tags": tags, "s3_location": s3_location}
+
+@router.delete("/image/delete")
+def delete_image(employee_id: str, s3_location: str):
+    s3_service.delete_from_s3(s3_location)
+    dynamodb_service_image.delete_image_metadata(employee_id, s3_location)
+    return {"message": "Image deleted successfully"}
 
 
 
