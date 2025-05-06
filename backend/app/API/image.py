@@ -1,8 +1,8 @@
-from fastapi import APIRouter, UploadFile, File, Form, HTTPException
+from fastapi import APIRouter, UploadFile, File, Form, HTTPException,Query
 from app.services import yolo_service, s3_service, dynamodb_service_image
 from datetime import datetime
 import uuid
-
+from typing import Optional
 router = APIRouter()
 
 @router.post("/upload")
@@ -41,6 +41,11 @@ def delete_image(employee_id: str, s3_location: str):
     return {"message": "Image deleted successfully"}
 
 
+# employee_id : It's a simple string; FastAPI handles it automatically
 
+# tags : It's a list, and multiple query values need special parsing
 
-
+@router.get("/query")
+def query_image(employee_id:Optional[str]=None,tags:Optional[list[str]]=Query(None)):
+    result=dynamodb_service_image.query_images(employee_id,tags)
+    return {"message":result}

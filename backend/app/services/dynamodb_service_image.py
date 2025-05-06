@@ -69,6 +69,72 @@ def delete_image_metadata(employee_id:str, s3_location:str):
    })
 
 
+# Very bulky and time consuming function complexity can be optimized 
+# later for searching using BS
+
+def query_images(employee_id:str,tags:list[str]):
+
+   # if employee_id is here then check for tags of that specific if no tags then just return image of 
+   # that specific employee_id , if tags are here then for each object that match the employee id ,search 
+   # each object match for tags if any tag maches then return image of that employeeid's image
+
+   # else only tags then search each object match for tags if any tag maches then return image of that
+   #  employeeid's image
+
+   response=table.get_item(Key={'id': user_id})
+
+   if 'Item' not in response:
+      raise ValueError("Employee ID not found in database")
+   
+   item=response['Item']
+
+   images_data = item.get('images_data', [])
+   img_loc = set()
+
+   if employee_id is not None:
+      for obj in images_data:
+         if obj.get('employee_id')==employee_id:
+            if tags is not None:
+               for i in tags:
+                  for j in obj.get('tags',[]):
+                     if i==j:
+                        img_loc.add(obj.get('s3_location'))
+            else:
+               img_loc.add(obj.get('s3_location'))
+   else:
+      for obj in images_data:
+         if tags is not None:
+            for i in tags:
+               for j in obj.get('tags',[]):
+                  if i==j:
+                     img_loc.add(obj.get('s3_location'))
+   
+   return list(img_loc)
+
+
+
+
+
+
+
+
+
+   
+
+
+   
+
+      
+   
+   
+
+
+
+
+
+
+
+
 
 
 
