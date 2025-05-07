@@ -14,12 +14,23 @@ aws_key = os.getenv("AWS_ACCESS_KEY_ID")
 aws_secret = os.getenv("AWS_SECRET_ACCESS_KEY")
 aws_region = os.getenv("AWS_REGION")
 
+s3_bucket_name=os.getenv("S3_BUCKET_NAME")
+
+
 # Create DynamoDB resource
 dynamodb = boto3.resource(
     'dynamodb',
     aws_access_key_id=aws_key,
     aws_secret_access_key=aws_secret,
     region_name=aws_region
+)
+
+# Initialize the S3 client
+s3_client = boto3.client(
+    's3',
+    aws_access_key_id=aws_key,        # Replace with your access key
+    aws_secret_access_key=aws_secret,    # Replace with your secret key
+    region_name=aws_region                     # Your bucket's region
 )
 
 # Use the table
@@ -69,47 +80,72 @@ def delete_image_metadata(employee_id:str, s3_location:str):
    })
 
 
+'''
+'get_object'	 Generate a URL to download (GET) a file
+'put_object'	 Generate a URL to upload (PUT) a file
+'delete_object' Generate a URL to delete an object
+'list_objects'	 List contents of a bucket (rare in presign)
+'''
+
+def generate_presigned_url(object_key, expiration=60):
+    try:
+        url = s3_client.generate_presigned_url(
+            'get_object',
+            Params={'Bucket': "alpha-ai-new", 'Key': object_key},
+            ExpiresIn=expiration  # Time in seconds (default: 3600 = 1 hour)
+        )
+        return url
+    except Exception as e:
+        print("Error generating pre-signed URL:", e)
+        return object_key
+
 # Very bulky and time consuming function complexity can be optimized 
 # later for searching using BS
 
-def query_images(employee_id:str,tags:list[str]):
 
-   # if employee_id is here then check for tags of that specific if no tags then just return image of 
-   # that specific employee_id , if tags are here then for each object that match the employee id ,search 
-   # each object match for tags if any tag maches then return image of that employeeid's image
+# if employee_id is here then check for tags of that specific if no tags then just return image of 
+# that specific employee_id , if tags are here then for each object that match the employee id ,search 
+# each object match for tags if any tag maches then return image of that employeeid's image
+# else only tags then search each object match for tags if any tag maches then return image of that
+#  employeeid's image
 
-   # else only tags then search each object match for tags if any tag maches then return image of that
-   #  employeeid's image
+def query_images(employee_id: str = None, tags: list[str] = None):
+    # Fetch employee record from DynamoDB
+    response = table.get_item(Key={'id': user_id})
+    
+    if 'Item' not in response:
+        raise ValueError("Employee ID not found in database")
 
-   response=table.get_item(Key={'id': user_id})
+    item = response['Item']
+    images_data = item.get('images_data', [])
+    matched_locations = set()
 
-   if 'Item' not in response:
-      raise ValueError("Employee ID not found in database")
-   
-   item=response['Item']
+    # Normalize tags to lowercase for case-insensitive comparison
+    tags_lower = {tag.lower() for tag in tags} if tags else set()
 
-   images_data = item.get('images_data', [])
-   img_loc = set()
+    for obj in images_data:
+        # Filter by employee_id if given
+        if employee_id and obj.get('employee_id') != employee_id:
+            continue
 
-   if employee_id is not None:
-      for obj in images_data:
-         if obj.get('employee_id')==employee_id:
-            if tags is not None:
-               for i in tags:
-                  for j in obj.get('tags',[]):
-                     if i==j:
-                        img_loc.add(obj.get('s3_location'))
-            else:
-               img_loc.add(obj.get('s3_location'))
-   else:
-      for obj in images_data:
-         if tags is not None:
-            for i in tags:
-               for j in obj.get('tags',[]):
-                  if i==j:
-                     img_loc.add(obj.get('s3_location'))
-   
-   return list(img_loc)
+        obj_tags = obj.get('tags', [])
+        obj_tags_lower = {tag.lower() for tag in obj_tags}
+
+        # If tags provided, check for intersection
+        if tags_lower:
+            if tags_lower & obj_tags_lower:
+                matched_locations.add(obj.get('s3_location'))
+        else:
+            # No tags filter; include all images of the employee
+            matched_locations.add(obj.get('s3_location'))
+
+    # Generate pre-signed URLs
+    urls = []
+    for s3_path in matched_locations:
+        cleaned_path = s3_path.replace('alpha-ai-new/', '')
+        urls.append(generate_presigned_url(cleaned_path))
+
+    return urls
 
 
 

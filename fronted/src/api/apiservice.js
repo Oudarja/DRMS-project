@@ -43,20 +43,50 @@ export const DeleteEmployee=async(employee_id)=>
 
 // All API call associated with images
 export const uploadImage = async (formData) => {
-  return axios.post(`${API_BASE_URL}/images/upload`, formData);
-};
-
-
-export const queryImages = async (employee_id, tags) => {
-  return axios.post(`${API_BASE_URL}/images/query`, {
-    employee_id,
-    tags,
+  return axios.post(`${API_BASE_URL}/images/upload`, formData, {
+    headers: {
+      'Content-Type': 'multipart/form-data',
+    },
   });
 };
+
+
+
+export const queryImages = async (employeeId, tags) => 
+{
+  
+  const params = {};
+
+  if (employeeId)
+     params.employee_id = employeeId;
+  
+  if (tags) {
+    // Convert comma-separated string to array
+    // .trim() function in JavaScript is used to remove 
+    // leading and trailing whitespace from a string.
+    const tagList = tags.split(',').map(t => t.trim());
+    // taglist contains all tag that were passed from fronted UI by user 
+    // and they are trimmed and commas are removed from them
+    tagList.forEach(tag => 
+    {
+      if (!params.tags) 
+        params.tags = [];
+
+      params.tags.push(tag);
+    });
+  }
+  //  console.log(params)
+
+  const res = await axios.get(`${API_BASE_URL}/images/query`, { params });
+  console.log(res)
+  return res.data.message;
+};
+
 
 export const deleteImage=async (employee_id)=>
 {
     const response = await axios.delete(`${API_BASE_URL}/images/image/delete/${employee_id}`);
+
     return response.data;
 }
 

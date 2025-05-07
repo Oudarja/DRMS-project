@@ -2,11 +2,12 @@ from fastapi import APIRouter, UploadFile, File, Form, HTTPException,Query
 from app.services import yolo_service, s3_service, dynamodb_service_image
 from datetime import datetime
 import uuid
-from typing import Optional
+from typing import Optional,List
+# from typing import Optional, List
 router = APIRouter()
 
 @router.post("/upload")
-async def upload_image(employee_id: str = Form(...),file: UploadFile = File(...)):
+async def upload_image(employee_id: str = Form(...), file: UploadFile = File(...)):
     # Step 1: Save temporarily & run YOLO
     # This returns the raw content of the file in bytes, not a file path or an image object.
     content=await file.read()
