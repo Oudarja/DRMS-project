@@ -1,0 +1,27 @@
+.scroll-buttons {
+    position: fixed;
+    right: 20px;
+    bottom: 30px;
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    z-index: 999;
+  }
+  
+  .scroll-btn {
+    background: linear-gradient(135deg, #3498db, #2ecc71);
+    border: none;
+    color: white;
+    padding: 10px 12px;
+    font-size: 18px;
+    border-radius: 50%;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+  }
+  
+  .scroll-btn:hover {
+    transform: scale(1.1);
+    background: linear-gradient(135deg, #2980b9, #27ae60);
+  }
+  

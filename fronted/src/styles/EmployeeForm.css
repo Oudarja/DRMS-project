@@ -2,7 +2,7 @@
 
 /* === Form Container === */
 .employee-form-container {
-    background: #ffffff;
+    background: #ffffff7b;
     border-radius: 12px;
     padding: 20px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
@@ -11,7 +11,7 @@
   
   .employee-form-container h2 {
     margin-bottom: 40px;
-    color: #2c3e50;
+    color: #080909;
     text-align: center;
   }
   
@@ -44,7 +44,7 @@
   
   /* === Employee List Section === */
   .employee-list-container h2 {
-    color: #2c3e50;
+    color: #0b0b0c;
     text-align: center;
     margin-bottom: 20px;
   }
@@ -72,6 +72,10 @@
     display: flex;
     flex-direction: column;
     min-width: 150px;
+  }
+
+  .employee-cell h3 {
+    color: #0b0b0c;
   }
   
   .cell-heading {
