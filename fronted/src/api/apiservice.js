@@ -9,6 +9,8 @@ that communicate with a backend like your FastAPI server.
 // to make requests to my FastAPI backend.
 import axios from 'axios';
 
+import qs from 'qs';
+
 // Fast api is running on port 8000 on local device
 const API_BASE_URL = 'http://127.0.0.1:8000'; 
 
@@ -49,8 +51,9 @@ export const uploadImage = async (formData) => {
     },
   });
 };
-
-
+// qs is for serealizing , Axios doesn't serialize array params into repeated query strings by default
+// But Fast Api expects serialized repeated query string like /images/query?tags=cat&tags=plane
+// configure Axios to serialize arrays properly.
 
 export const queryImages = async (employeeId, tags) => 
 {
@@ -77,8 +80,10 @@ export const queryImages = async (employeeId, tags) =>
   }
   //  console.log(params)
 
-  const res = await axios.get(`${API_BASE_URL}/images/query`, { params });
-  console.log(res)
+  const res = await axios.get(`${API_BASE_URL}/images/query`, { params ,
+    paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' }),
+});
+  console.log(res.data)
   return res.data.message;
 };
 

@@ -1,0 +1,182 @@
+/* EmployeeForm.css */
+
+/* === Form Container === */
+.employee-form-container {
+    background: #ffffff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    margin-bottom: 40px;
+  }
+  
+  .employee-form-container h2 {
+    margin-bottom: 40px;
+    color: #2c3e50;
+    text-align: center;
+  }
+  
+  .input-field {
+    text-align: center;
+  }
+  
+  .employee-form-container input {
+    padding: 10px;
+    margin-right: 10px;
+    margin-bottom: 10px;
+    border: 1px solid #ccc;
+    border-radius: 6px;
+    font-size: 16px;
+  }
+  
+  .employee-form-container button {
+    padding: 10px 16px;
+    background-color: green;
+    color: white;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+  }
+  
+  .employee-form-container button:hover {
+    background-color: rgb(2, 64, 33);
+  }
+  
+  /* === Employee List Section === */
+  .employee-list-container h2 {
+    color: #2c3e50;
+    text-align: center;
+    margin-bottom: 20px;
+  }
+  
+  .employee-list-container ul {
+    list-style-type: none;
+    padding-left: 0;
+  }
+  
+  /* Horizontal layout for employee item */
+  .employee-item {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 20px;
+    align-items: flex-start;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 8px;
+    padding: 15px;
+    margin-bottom: 15px;
+  }
+  
+  /* Each cell for employee info with heading */
+  .employee-cell {
+    display: flex;
+    flex-direction: column;
+    min-width: 150px;
+  }
+  
+  .cell-heading {
+    font-weight: bold;
+    color: #34495e;
+    margin-bottom: 4px;
+  }
+  
+  /* Style file input and buttons */
+  .employee-item input[type="file"] {
+    margin-top: 6px;
+  }
+  
+  .employee-item button {
+    margin-top: 6px;
+    margin-left: 0;
+    padding: 6px 12px;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+  }
+  
+  /* === Button Styles === */
+  .btn-edit {
+    background-color: #2ec7d5;
+    color: black;
+  }
+  
+  .btn-edit:hover {
+    background-color: #074b5a;
+    color: white;
+  }
+  
+  .btn-delete {
+    background-color: #e74c3c;
+    color: white;
+  }
+  
+  .btn-delete:hover {
+    background-color: #7d1105;
+  }
+  
+  .btn-upload {
+    background-color: #3498db;
+    color: white;
+    padding: 8px 14px;
+    border: none;
+    border-radius: 5px;
+    font-size: 14px;
+    cursor: pointer;
+    display: inline-block;
+    transition: background-color 0.3s;
+  }
+  
+  .btn-upload:hover {
+    background-color: #034672;
+  }
+
+  .button-group {
+    display: flex;
+    gap: 10px;
+    margin-top: 1px;
+  }
+
+  .editing-controls {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    margin-top: 5px;
+  }
+  
+  .editing-controls input[type="text"] {
+    padding: 8px;
+    font-size: 15px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    min-width: 180px;
+  }
+  
+  .editing-controls button {
+    padding: 6px 12px;
+    font-size: 14px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    color: white;
+    transition: background-color 0.3s;
+  }
+  
+  .editing-controls button:first-of-type {
+    background-color: #27ae60; /* Save button - green */
+  }
+  
+  .editing-controls button:first-of-type:hover {
+    background-color: #1e8449;
+  }
+  
+  .editing-controls button:last-of-type {
+    background-color: #bdc3c7; /* Cancel button - grey */
+    color: black;
+  }
+  
+  .editing-controls button:last-of-type:hover {
+    background-color: #95a5a6;
+  }
+  

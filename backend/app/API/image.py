@@ -47,6 +47,6 @@ def delete_image(employee_id: str, s3_location: str):
 # tags : It's a list, and multiple query values need special parsing
 
 @router.get("/query")
-def query_image(employee_id:Optional[str]=None,tags:Optional[list[str]]=Query(None)):
+def query_image(employee_id:Optional[str]=Query(None),tags:Optional[List[str]]=Query(None)):
     result=dynamodb_service_image.query_images(employee_id,tags)
     return {"message":result}

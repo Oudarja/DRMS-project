@@ -1,8 +1,12 @@
 import React,{ useState } from 'react'
 import { queryImages } from '../api/apiservice';
+import '../styles/QueryImage.css';
 
 const QueryImages = () => {
   const [empId, setEmpId] = useState('');
+  // I am taking input from a string box (not a multi-select), so 
+  // store it as a string, and let apiService.js convert it to an 
+  // array in which format FastAPI expects to receive.
   const [tags, setTags] = useState('');
   const [results, setResults] = useState([]);
 
@@ -20,7 +24,7 @@ const QueryImages = () => {
   };
 
   return (
-    <div>
+    <div className="query-container">
       <h2>Search Images</h2>
 
       <div>

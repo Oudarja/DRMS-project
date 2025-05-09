@@ -1,5 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import {addEmployee, fetchAllEmployees,uploadImage,DeleteEmployee,UpdateEmployee}  from '../api/apiservice';
+import '../styles/EmployeeForm.css';
+
 
 const EmployeeForm = () => {
 
@@ -142,62 +144,109 @@ const handleDelete = async (empId) => {
 //   };
 
   return (
-    <div>
-    <div>
-    <h2>Add Employee</h2>
-    <input name="employee_id" placeholder="Employee ID" value={form.employee_id} onChange={handleChange} />
-    <input name="name" placeholder="Name" value={form.name} onChange={handleChange} />
-    <button onClick={handleSubmit}>Add Employee</button>
+    <>
+    <div className="employee-form-container">
+      <h2>Add Employee</h2>
+      <div className='input-field'>
+      <input name="employee_id" placeholder="Employee ID" value={form.employee_id} onChange={handleChange} />
+      <input name="name" placeholder="Name" value={form.name} onChange={handleChange} />
+      <button onClick={handleSubmit}>Add Employee</button>
+      </div>
+     
     </div>
-
+    
     <hr />
-    <div>
-    <h3>All Employees</h3>
-    <ul>
+    
+    <div className="employee-list-container">
+        <h2>All Employees</h2>
+        <ul>
+          {employees.map((emp) => (
+            <li key={emp.employee_id} className="employee-item">
+              <div>
 
-    {employees.map((emp) => (
-  <li key={emp.employee_id}>
-    <div>
-      {editingId === emp.employee_id ? (
-        <>
-          <input
-            type="text"
-            name="name"
-            value={editForm.name}
-            onChange={(e) =>
-              setEditForm({ ...editForm, name: e.target.value })
-            }
-          />
-          <button onClick={() => handleUpdate(emp.employee_id)}>Save</button>
-          <button onClick={() => setEditingId(null)}>Cancel</button>
-        </>
-      ) : (
-        <>
-          <strong>{emp.name}</strong> — 
-          <strong>ID: {emp.employee_id}</strong> — 
-          <strong>Created Time: {emp.created_time}</strong>
-          <button onClick={() => startEdit(emp)}>Edit</button>
-          <button onClick={() => handleDelete(emp.employee_id)}>Delete</button>
-        </>
-      )}
-    </div>
+                {/* {editingId === emp.employee_id ? (
+                  <>
+                    <input
+                      type="text"
+                      name="name"
+                      value={editForm.name}
+                      onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
+                    <button onClick={() => handleUpdate(emp.employee_id)}>Save</button>
+                    <button onClick={() => setEditingId(null)}>Cancel</button>
+                  </>
+                ) : (
+                  <>
+                    <strong>ID: {emp.employee_id}</strong> —
+                    <strong>{emp.name}</strong> —
+                    <strong>Created: {emp.created_time}</strong>
+                    <button className="btn-edit" onClick={() => startEdit(emp)}>Edit</button>
+                    <button className="btn-delete" onClick={() => handleDelete(emp.employee_id)}>Delete</button>
+                  </>
+                )} */}
 
-    {/* Image upload section (as before) */}
-    <div>
-      <input
-        type="file"
-        accept="image/*"
-        onChange={(e) => handleFileChange(emp.employee_id, e)}
-      />
-      <button onClick={() => handleUpload(emp.employee_id)}>Upload Image</button>
-    </div>
-
-  </li>
-))}
-
-    </ul>
-    </div>
+{editingId === emp.employee_id ? (
+  <>
+    <div className="editing-controls">
+  <input
+    type="text"
+    name="name"
+    value={editForm.name}
+    onChange={(e) => setEditForm({ ...editForm, name: e.target.value })}
+  />
+  <button onClick={() => handleUpdate(emp.employee_id)}>Save</button>
+  <button onClick={() => setEditingId(null)}>Cancel</button>
+</div>
+  </>
+) : (
+  <>
+    <div className="employee-item">
+  <div className="employee-cell">
+    <div className="cell-heading">Employee ID</div>
+    <div>{emp.employee_id}</div>
   </div>
+  <div className="employee-cell">
+    <div className="cell-heading">Name</div>
+    <div>{emp.name}</div>
+  </div>
+  <div className="employee-cell">
+    <div className="cell-heading">Created Time</div>
+    <div>{emp.created_time}</div>
+  </div>
+
+
+{/* 
+  <div className="employee-cell">
+    <input type="file" onChange={handleFileChange} />
+    <button className="btn-upload" onClick={uploadImage}>Upload Image</button>
+  </div> */}
+
+  <div>
+                <input
+                  type="file"
+                  accept="image/*"
+                  onChange={(e) => handleFileChange(emp.employee_id, e)} />
+              <button className="btn-upload" onClick={() => handleUpload(emp.employee_id)}>Upload Image</button>
+              </div>
+
+  <div className="employee-cell">
+  <div className="button-group">
+    <button className="btn-edit" onClick={() => startEdit(emp)}>Edit</button>
+    <button className="btn-delete" onClick={() => handleDelete(emp.employee_id)}>Delete</button>
+  </div>
+  </div>
+
+</div>
+
+  </>
+)}
+              </div>
+            </li>
+          ))}
+        </ul>
+      </div>
+      </>
+
+   
   )
 }
 
