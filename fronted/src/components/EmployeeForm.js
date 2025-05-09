@@ -92,6 +92,8 @@ const handleUpload = async (empId) => {
     // pass only form data now which has both employee id and image file
     await uploadImage(formData);
     alert("Image uploaded successfully!");
+    //Reload the entire page
+    window.location.reload(); 
   } catch (error) {
     console.error("Image upload failed:", error);
     alert("Upload failed.");
@@ -138,10 +140,32 @@ const handleDelete = async (empId) => {
   }
 };
 
-// const formatDate = (isoString) => {
-//     const date = new Date(isoString);
-//     return date.toISOString().replace('T', ' ').split('.')[0];  // "2025-05-04 07:19:17"
-//   };
+const formatDateTime12Hour = (isoString) => {
+   // 1. Remove fractional seconds beyond 3 digits
+  // 2. Remove redundant time zone like "+00:00Z" -> just "Z"
+  // isoString format like "2025-05-04T07:19:17.892000+00:00Z"
+  const cleaned = isoString
+    .replace(/\.\d{3,6}/, '')        // remove .xxxxxx
+    .replace(/\+00:00Z$/, 'Z');      // replace +00:00Z with Z
+
+  const date = new Date(cleaned);
+
+  // Check if the date is valid
+  if (isNaN(date.getTime())) {
+    return 'Invalid date';
+  }
+
+  // Format to 12-hour time with AM/PM
+  return date.toLocaleString('en-US', {
+    year: 'numeric',
+    month: 'short',
+    day: '2-digit',
+    hour: '2-digit',
+    minute: '2-digit',
+    second: '2-digit',
+    hour12: true,
+  });
+};
 
   return (
     <>
@@ -164,26 +188,6 @@ const handleDelete = async (empId) => {
             <li key={emp.employee_id} className="employee-item">
               <div>
 
-                {/* {editingId === emp.employee_id ? (
-                  <>
-                    <input
-                      type="text"
-                      name="name"
-                      value={editForm.name}
-                      onChange={(e) => setEditForm({ ...editForm, name: e.target.value })} />
-                    <button onClick={() => handleUpdate(emp.employee_id)}>Save</button>
-                    <button onClick={() => setEditingId(null)}>Cancel</button>
-                  </>
-                ) : (
-                  <>
-                    <strong>ID: {emp.employee_id}</strong> —
-                    <strong>{emp.name}</strong> —
-                    <strong>Created: {emp.created_time}</strong>
-                    <button className="btn-edit" onClick={() => startEdit(emp)}>Edit</button>
-                    <button className="btn-delete" onClick={() => handleDelete(emp.employee_id)}>Delete</button>
-                  </>
-                )} */}
-
 {editingId === emp.employee_id ? (
   <>
     <div className="editing-controls">
@@ -201,24 +205,19 @@ const handleDelete = async (empId) => {
   <>
     <div className="employee-item">
   <div className="employee-cell">
-    <div className="cell-heading">Employee ID</div>
+    <div className="cell-heading"><h3>Employee ID</h3></div>
     <div>{emp.employee_id}</div>
   </div>
   <div className="employee-cell">
-    <div className="cell-heading">Name</div>
+    <div className="cell-heading"><h3>Name</h3></div>
     <div>{emp.name}</div>
   </div>
   <div className="employee-cell">
-    <div className="cell-heading">Created Time</div>
-    <div>{emp.created_time}</div>
+    <div className="cell-heading"><h3>Created Time</h3></div>
+    <div>{formatDateTime12Hour(emp.created_time)}</div>
   </div>
 
 
-{/* 
-  <div className="employee-cell">
-    <input type="file" onChange={handleFileChange} />
-    <button className="btn-upload" onClick={uploadImage}>Upload Image</button>
-  </div> */}
 
   <div>
                 <input

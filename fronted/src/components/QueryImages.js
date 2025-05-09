@@ -25,10 +25,17 @@ const QueryImages = () => {
 
   return (
     <div className="query-container">
+
+
+{/* Conditional rendering */}
+
+{results.length ==0 ? (
+
+<>
       <h2>Search Images</h2>
 
       <div>
-        <label>Search by Employee ID:</label><br />
+        <label><strong>Search by Employee ID:</strong></label><br />
         <input
           value={empId}
           onChange={(e) => setEmpId(e.target.value)}
@@ -37,7 +44,7 @@ const QueryImages = () => {
       </div>
 
       <div>
-        <label>Search by Tags (comma-separated):</label><br />
+        <label><strong>Search by Tags (comma-separated):</strong></label><br />
         <input
           value={tags}
           onChange={(e) => setTags(e.target.value)}
@@ -46,8 +53,33 @@ const QueryImages = () => {
       </div>
 
       <button onClick={handleSearch}>Search</button>
+      </>
 
+):(
+<>
       <hr />
+      
+      <h2>Search Images</h2>
+
+      <div>
+        <label><strong>Search by Employee ID:</strong></label><br />
+        <input
+          value={empId}
+          onChange={(e) => setEmpId(e.target.value)}
+          placeholder="Enter Employee ID"
+        />
+      </div>
+
+      <div>
+        <label><strong>Search by Tags (comma-separated):</strong></label><br />
+        <input
+          value={tags}
+          onChange={(e) => setTags(e.target.value)}
+          placeholder="e.g., person,car,dog"
+        />
+      </div>
+
+      <button onClick={handleSearch}>Search</button>
       <h3>Results</h3>
       <ul>
 
@@ -67,7 +99,11 @@ const QueryImages = () => {
   );
 })}
       </ul>
+      </>
+)
+}
     </div>
+
   );
 }
 

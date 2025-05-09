@@ -1,46 +1,76 @@
 /* App.css */
 
+/* 🔥 Vibrant Animated Gradient Background */
 body {
-    margin: 0;
-    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-    background-color: #f0f2f5;
-    color: #333;
-  }
-  
-  .app-container {
-    max-width: 960px;
-    margin: 0 auto;
-    padding: 20px;
-  }
-  
-  h1 {
-    text-align: center;
-    color: #2c3e50;
-    margin-bottom: 30px;
-  }
-  
-  nav {
-    text-align: center;
-    margin-bottom: 30px;
-  }
-  
-  nav a {
-    text-decoration: none;
-    color: #3498db;
-    font-weight: 500;
-    margin: 0 15px;
-    padding: 8px 16px;
-    border-radius: 4px;
-    transition: background-color 0.2s ease;
-  }
-  
-  nav a:hover {
-    background-color: #ecf0f1;
-  }
-  
-  nav a.active {
-    font-weight: bold;
-    color: #2c3e50;
-    border-bottom: 2px solid #3498db;
-  }
-  
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(270deg, #f5bce9, #9e9cd8, #90e7b0, #6da5ac, #f292a1);
+  background-size: 1000% 1000%;
+  animation: vibrantGradient 40s ease infinite;
+  color: #333;
+  min-height: 100vh;
+}
+
+/* 🌈 Gradient Animation Keyframes */
+@keyframes vibrantGradient {
+  0% { background-position: 0% 50%; }
+  25% { background-position: 50% 50%; }
+  50% { background-position: 100% 50%; }
+  75% { background-position: 50% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* 📦 App Container */
+.app-container {
+  max-width: 960px;
+  margin: 0 auto;
+  padding: 20px;
+  /* background: rgba(255, 255, 255, 0.92); */
+  border-radius: 16px;
+  box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+}
+
+/* 🧭 Header */
+h1 {
+  text-align: center;
+  color: #1f2937;
+  margin-bottom: 30px;
+}
+
+/* 🧭 Navigation */
+nav {
+  text-align: center;
+  margin-bottom: 30px;
+}
+
+/* 🔗 Nav Links */
+nav a {
+  text-decoration: none;
+  color: #3b82f6;
+  font-weight: 500;
+  margin: 0 15px;
+  padding: 8px 16px;
+  border-radius: 6px;
+  transition: background-color 0.5s ease, transform 0.5s ease;
+}
+
+nav a:hover {
+  background-color: rgba(255, 255, 255, 0.3);
+  transform: scale(1.1);
+}
+
+nav a.active {
+  font-weight: bold;
+  color: #090a0e;
+  border-bottom: 3px solid #3b82f6;
+}
+
+.nav-link {
+  display: flex;
+  justify-content: center;
+  gap: 30px;
+}
+
+.nav-link h3 {
+  margin: 0;
+}
