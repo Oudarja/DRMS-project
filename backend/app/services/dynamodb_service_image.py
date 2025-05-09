@@ -108,11 +108,9 @@ def generate_presigned_url(object_key, expiration=60):
 # each object match for tags if any tag maches then return image of that employeeid's image
 # else only tags then search each object match for tags if any tag maches then return image of that
 #  employeeid's image
-
 def query_images(employee_id: str = None, tags: list[str] = None):
     # Fetch employee record from DynamoDB
     response = table.get_item(Key={'id': user_id})
-    
     if 'Item' not in response:
         raise ValueError("Employee ID not found in database")
 
@@ -120,32 +118,35 @@ def query_images(employee_id: str = None, tags: list[str] = None):
     images_data = item.get('images_data', [])
     matched_locations = set()
 
-    # Normalize tags to lowercase for case-insensitive comparison
     tags_lower = {tag.lower() for tag in tags} if tags else set()
 
     for obj in images_data:
-        # Filter by employee_id if given
-        if employee_id and obj.get('employee_id') != employee_id:
-            continue
-
+        obj_emp_id = obj.get('employee_id')
         obj_tags = obj.get('tags', [])
         obj_tags_lower = {tag.lower() for tag in obj_tags}
 
-        # If tags provided, check for intersection
-        if tags_lower:
-            if tags_lower & obj_tags_lower:
+        if employee_id:
+            if obj_emp_id != employee_id:
+                continue  # skip irrelevant employees
+            if tags_lower:
+                for i in tags_lower:
+                    for j in obj_tags_lower:
+                        if i==j:
+                            matched_locations.add(obj.get('s3_location'))
+            else:
                 matched_locations.add(obj.get('s3_location'))
-        else:
-            # No tags filter; include all images of the employee
-            matched_locations.add(obj.get('s3_location'))
+        elif tags_lower:
+             for i in tags_lower:
+                    for j in obj_tags_lower:
+                        if i==j:
+                            matched_locations.add(obj.get('s3_location'))
 
-    # Generate pre-signed URLs
-    urls = []
-    for s3_path in matched_locations:
-        cleaned_path = s3_path.replace('alpha-ai-new/', '')
-        urls.append(generate_presigned_url(cleaned_path))
-
+    urls = [
+        generate_presigned_url(s3_path.replace('alpha-ai-new/', ''))
+        for s3_path in matched_locations
+    ]
     return urls
+
 
 
 
