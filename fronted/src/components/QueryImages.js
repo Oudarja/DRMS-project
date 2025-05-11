@@ -29,7 +29,7 @@ const QueryImages = () => {
 
 {/* Conditional rendering */}
 
-{results.length ==0 ? (
+{results.length == 0 ? (
 
 <>
       <h2>Search Images</h2>

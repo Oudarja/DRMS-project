@@ -5,6 +5,7 @@ import os
 import boto3
 from datetime import datetime
 from app.models.employee import EmployeeCreate
+from app.services import dynamodb_service_image,s3_service
 # Load environment variables from .env file
 load_dotenv()
 
@@ -119,26 +120,50 @@ returns the item like this:
 }
 
 '''
+
+user_id_img = "Tanmoy_images"
+
 # Delete a specific employee following it's id
 def delete_employee(emp_id):
+
     response = table.get_item(Key={'id': user_id})
+
+    response_img=table.get_item(Key={'id':user_id_img})
+
     item = response.get('Item')
+
+    item_=response_img.get('Item')
 
     # This is list of dicts
     employees = item['employee']
 
+    employees_img=item_['images_data']
+
     # linear search to find 
     # optimization purpose BS can be used later
     updated_employee_list = []
+
+    updated_employee_img=[]
     
     for i in employees:
         if i['employee_id']!=emp_id:
             updated_employee_list.append(i)
+    
+    for i in employees_img:
+        if i['employee_id']!=emp_id:
+            updated_employee_img.append(i)
+        else:
+            s3_service.delete_from_s3(i['s3_location'])
 
     table.put_item(Item={
         'id': user_id,  # Use your table's partition key
         'employee': updated_employee_list   # Could act as sort key if defined
         })
+
+    table.put_item(Item={
+        'id':user_id_img,
+        'images_data':updated_employee_img
+    })
 
     print("DELETE response:", response)
 
