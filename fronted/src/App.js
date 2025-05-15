@@ -6,6 +6,16 @@ import './App.css';
 import ScrollButtons from './components/ScrollButton.js';
 
 const NavLinks = () => {
+  // useLocation is a React Hook provided by React Router that 
+  // allows you to access the current location object, which 
+  // represents the current URL in your application.
+  /*
+  It gives you details about the current route, such as:
+  ->The pathname (URL path),
+  ->Any search query parameters,
+  ->The hash fragment,
+  ->And state if passed via navigation
+  */
   const location = useLocation();
 
   return (

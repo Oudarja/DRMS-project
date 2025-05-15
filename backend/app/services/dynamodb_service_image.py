@@ -3,7 +3,7 @@
 from dotenv import load_dotenv
 import os
 import boto3
-from datetime import datetime
+from datetime import datetime,timezone
 from app.models.employee import EmployeeCreate
 from app.models.images import  ImageMetadata
 # Load environment variables from .env file

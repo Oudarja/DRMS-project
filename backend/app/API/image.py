@@ -1,6 +1,6 @@
 from fastapi import APIRouter, UploadFile, File, Form, HTTPException,Query
 from app.services import yolo_service, s3_service, dynamodb_service_image
-from datetime import datetime
+from datetime import datetime,timezone
 import uuid
 from typing import Optional,List
 # from typing import Optional, List
@@ -26,7 +26,7 @@ async def upload_image(employee_id: str = Form(...), file: UploadFile = File(...
     # Step 3: Save metadata to DynamoDB_service_image
     metadata = {
         "employee_id": employee_id,
-        "upload_time": datetime.utcnow().isoformat(),
+        "upload_time": datetime.now(timezone.utc).isoformat(),
         "s3_location": s3_location,
         "tags": tags,
         "size": size
