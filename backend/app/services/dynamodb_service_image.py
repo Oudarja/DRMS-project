@@ -62,6 +62,8 @@ def save_image_metadata(metadata: dict):
      return validated_metadata.dict()
 
 # Delete image bussiness logic 
+# To delete a specific image of an employee
+# An employee can have many image uploaded, but if when anyone  
 def delete_image_metadata(employee_id:str, s3_location:str):
    response = table.get_item(Key={'id': user_id})
 
