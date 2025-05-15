@@ -1,6 +1,5 @@
 from pydantic import BaseModel, Field
 from datetime import datetime
-
 # Field(...) is used for:
 # Setting default values (with default or default_factory)
 # Adding validation constraints (like min_length, max_length, gt, lt, etc.)

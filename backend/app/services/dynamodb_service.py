@@ -102,6 +102,9 @@ def update_employee(emp_id,name):
             # # store only the unique 
             # i['metadata']=list(i['metadata'])
     
+    
+    # This function is called put_item by keyword argument
+    # These are passed by specifying the parameter name.
     table.put_item(Item={
         'id': user_id,  # Use your table's partition key
         'employee': employee_data # Could act as sort key if defined
