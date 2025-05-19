@@ -83,7 +83,7 @@ export const queryImages = async (employeeId, tags) =>
   const res = await axios.get(`${API_BASE_URL}/images/query`, { params ,
     paramsSerializer: params => qs.stringify(params, { arrayFormat: 'repeat' }),
 });
-  console.log(res.data)
+  console.log(res)
   return res.data.message;
 };
 

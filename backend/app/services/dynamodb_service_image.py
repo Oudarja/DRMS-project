@@ -118,7 +118,9 @@ def query_images(employee_id: str = None, tags: list[str] = None):
 
     item = response['Item']
     images_data = item.get('images_data', [])
-    matched_locations = set()
+    # matched_results = set()
+    matched_results=[]
+    
 
     tags_lower = {tag.lower() for tag in tags} if tags else set()
 
@@ -134,20 +136,44 @@ def query_images(employee_id: str = None, tags: list[str] = None):
                 for i in tags_lower:
                     for j in obj_tags_lower:
                         if i==j:
-                            matched_locations.add(obj.get('s3_location'))
+                            result = {
+                                "url": generate_presigned_url(obj.get('s3_location').replace('alpha-ai-new/', '')),
+                                "tags": obj.get("tags", []),
+                                "upload_time": obj.get("upload_time"),
+                                "size": obj.get("size"),
+                                "employee_id": obj.get("employee_id"),
+                                }
+                            matched_results.append(result)
             else:
-                matched_locations.add(obj.get('s3_location'))
+                result = {
+                                "url": generate_presigned_url(obj.get('s3_location').replace('alpha-ai-new/', '')),
+                                "tags": obj.get("tags", []),
+                                "upload_time": obj.get("upload_time"),
+                                "size": obj.get("size"),
+                                "employee_id": obj.get("employee_id"),
+                                }
+                matched_results.append(result)
         elif tags_lower:
              for i in tags_lower:
                     for j in obj_tags_lower:
                         if i==j:
-                            matched_locations.add(obj.get('s3_location'))
+                            result = {
+                                # s3_path.replace('alpha-ai-new/', '')
+                                "url": generate_presigned_url(obj.get('s3_location').replace('alpha-ai-new/', '')),
+                                "tags": obj.get("tags", []),
+                                "upload_time": obj.get("upload_time"),
+                                "size": obj.get("size"),
+                                "employee_id": obj.get("employee_id"),
+                                }
+                            matched_results.append(result)
 
-    urls = [
-        generate_presigned_url(s3_path.replace('alpha-ai-new/', ''))
-        for s3_path in matched_locations
-    ]
-    return urls
+    # urls = [
+    #     generate_presigned_url(s3_path.replace('alpha-ai-new/', ''))
+    #     for s3_path in matched_locations
+    # ]
+    # return urls
+    # Now this list of dictionary contains all the information of the image
+    return matched_results
 
 
 
